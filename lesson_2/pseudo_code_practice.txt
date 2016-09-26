@@ -1,0 +1,54 @@
+# a method that returns the sum of two integers
+
+Given 2 integers
+Add the 2 integers together
+Return the sum
+
+START
+  SET/GET integer1
+  SET/GET integer2
+  SET sum = integer1 + integer2
+  PRINT sum
+END
+
+# a method that takes an array of strings, and returns a string that is
+# all those strings concatenated together
+
+Given an array of strings
+Iterate through the array of strings
+- Concatenate the strings together
+Return concatenated string
+
+START
+  SET/GET string_array = array of strings
+  WHILE iterator < length of array
+    SET concat_string += string element at iteration level
+  PRINT concat_string
+END
+
+# a method that takes an array of integers, and returns a new array
+# with every other element
+
+Given an array of integers
+Initialize a counter variable to 0
+Create a new empty array
+Iterate through the array of integers
+   - if counter variable is an odd number
+     - move to the next iteration
+   - else
+     - add value to end of the new array
+   - increment the counter variable by 1
+return new array
+
+START
+  GET/SET integer_array = array of integers
+  SET counter = 0
+  SET new_array = []
+  WHILE iterator < length of array
+    IF counter is an odd number
+      go to next iteration
+    ELSE
+      new_array << value at current iteration
+    SET counter += 1
+  PRINT new_array
+END
