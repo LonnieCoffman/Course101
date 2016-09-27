@@ -8,10 +8,9 @@ loop do
   if loan_amount.to_i.to_s == loan_amount ||
      loan_amount.to_f.to_s == loan_amount
     loan_amount = loan_amount.to_f
-    break
-  else
-    puts 'Loan amount appears invalid.  Please enter loan amount:'
+    break if loan_amount > 0
   end
+  puts 'Loan amount appears invalid.  Please enter loan amount:'
 end
 
 # get APR.  allow to be entered as a % or integer or float. convert all to float
@@ -25,13 +24,11 @@ loop do
   if annual_percentage_rate.to_i.to_s == annual_percentage_rate ||
      annual_percentage_rate.to_f.to_s == annual_percentage_rate
     annual_percentage_rate = annual_percentage_rate.to_f
-    annual_percentage_rate *= 0.01 if annual_percentage_rate > 1
-    break
-  else
-    puts 'Annual Percentage Rate appears invalid. ' \
-         'Please enter Annual Percentage Rate:'
+    annual_percentage_rate *= 0.01 if annual_percentage_rate >= 1
+    break if annual_percentage_rate >= 0
   end
-  break
+  puts 'Annual Percentage Rate appears invalid. ' \
+         'Please enter Annual Percentage Rate:'
 end
 
 # get loan duration in months.  Only allow positive integers.
@@ -41,10 +38,9 @@ loop do
   loan_duration = gets.chomp
   if loan_duration.to_i.to_s == loan_duration
     loan_duration = loan_duration.to_i
-    break
-  else
-    puts 'Loan duration appears invalid. Please enter loan duration:'
+    break if loan_duration > 0
   end
+  puts 'Loan duration appears invalid. Please enter loan duration:'
 end
 
 monthly_interest_rate = annual_percentage_rate / 12
@@ -55,4 +51,4 @@ monthly_payment = loan_amount *
 
 puts "A loan amount of $#{format('%.2f', loan_amount)} with an APR of " \
      "#{annual_percentage_rate * 100}% for #{loan_duration} months will " \
-     "require a payment of $#{monthly_payment.round(2)}"
+     "require a payment of $#{format('%.2f', monthly_payment)}"
