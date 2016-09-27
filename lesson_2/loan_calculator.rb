@@ -1,12 +1,42 @@
+def float?(string)
+  string.to_f.to_s == string
+end
+
+def int?(string)
+  string.to_i.to_s == string
+end
+
+def valid_apr?(string)
+  int?(strip_symbols(string)) || float?(strip_symbols(string))
+end
+
+def strip_symbols(string)
+  ['%', ',', '$'].each do |symbol|
+    string.delete! symbol if string.include? symbol
+  end
+  string
+end
+
+def clean_apr(string)
+  if string.include? '%' # convert a percentage
+    strip_symbols(string)
+    string = string.to_f * 0.01
+  elsif string.to_f >= 0.1
+    string.to_f * 0.01
+  else
+    string.to_f
+  end
+end
+
 # get loan amount. verify that the amount given is either an integer or float
 # if a dollar symbol or comma is in amount remove prior to validaing
 puts 'What is the amount of your loan?'
 loan_amount = ''
 loop do
   loan_amount = gets.chomp
-  loan_amount.delete! '$,'
-  if loan_amount.to_i.to_s == loan_amount ||
-     loan_amount.to_f.to_s == loan_amount
+  loan_amount.chomp! '0' if loan_amount.include? '.00'
+  loan_amount = strip_symbols(loan_amount)
+  if int?(loan_amount) || float?(loan_amount)
     loan_amount = loan_amount.to_f
     break if loan_amount > 0
   end
@@ -19,12 +49,9 @@ puts 'What is your Annual Percentage Rate (APR)?'
 annual_percentage_rate = ''
 loop do
   annual_percentage_rate = gets.chomp
-  annual_percentage_rate.delete! '%'
   annual_percentage_rate.prepend '0' if annual_percentage_rate.start_with?('.')
-  if annual_percentage_rate.to_i.to_s == annual_percentage_rate ||
-     annual_percentage_rate.to_f.to_s == annual_percentage_rate
-    annual_percentage_rate = annual_percentage_rate.to_f
-    annual_percentage_rate *= 0.01 if annual_percentage_rate >= 1
+  if valid_apr?(annual_percentage_rate)
+    annual_percentage_rate = clean_apr(annual_percentage_rate)
     break if annual_percentage_rate >= 0
   end
   puts 'Annual Percentage Rate appears invalid. ' \
@@ -55,5 +82,5 @@ else
 end
 
 puts "A loan amount of $#{format('%.2f', loan_amount)} with an APR of " \
-     "#{annual_percentage_rate * 100}% for #{loan_duration} months will " \
-     "require a payment of $#{format('%.2f', monthly_payment)}"
+     "#{(annual_percentage_rate * 100).round(2)}% for #{loan_duration} " \
+     "months will require a payment of $#{format('%.2f', monthly_payment)}"
