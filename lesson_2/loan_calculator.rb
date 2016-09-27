@@ -45,9 +45,14 @@ end
 
 monthly_interest_rate = annual_percentage_rate / 12
 
-monthly_payment = loan_amount *
-                  (monthly_interest_rate /
-                  (1 - (1 + monthly_interest_rate)**-loan_duration))
+# modified formula for 0% interest Rate
+if annual_percentage_rate.zero?
+  monthly_payment = loan_amount / loan_duration
+else
+  monthly_payment = loan_amount *
+                    (monthly_interest_rate /
+                    (1 - (1 + monthly_interest_rate)**-loan_duration))
+end
 
 puts "A loan amount of $#{format('%.2f', loan_amount)} with an APR of " \
      "#{annual_percentage_rate * 100}% for #{loan_duration} months will " \
