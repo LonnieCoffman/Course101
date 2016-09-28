@@ -54,10 +54,16 @@ def win?(first, second)
   false
 end
 
+def get_result(first, second)
+  return 'tie' if first == second
+  return 'win' if win?(first, second)
+  'lose'
+end
+
 def display_result(first, second)
   WINNING_COMBOS[first.to_sym].each do |rule|
     if rule.include?(second)
-      puts rule
+      puts "#{rule}!!"
       break
     end
   end
@@ -76,7 +82,7 @@ end
 
 loop do
   clear
-  puts '(R)ules ... (S)tart Game ... (E)xit Game'
+  puts '(R)ules ... (S)tart Game ... (Q)uit Game'
   action = gets.chomp.downcase
 
   # dislpay the rules of the game
@@ -105,13 +111,29 @@ loop do
           break if VALID_CHOICES.include?(choice)
         end
 
-        # determine winner
+        computer_choice = VALID_CHOICES.sample
 
+        # determine winner
+        puts
+        puts "You chose: #{choice}; Computer chose: #{computer_choice}"
+        result = get_result(choice, computer_choice)
+# ----- move to method
+        case result
+        when 'tie'
+          puts 'you tied!'
+        when 'win'
+          puts 'you won!'
+        when 'lose'
+          puts 'you lose!'
+        end
+# ----- end move to method
+        gets
         break
       end
+      break
     end
 
-  elsif action == 'e'
+  elsif action == 'q'
     break
 
   else
