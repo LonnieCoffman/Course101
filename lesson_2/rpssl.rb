@@ -83,6 +83,10 @@ def win?(first, second)
   false
 end
 
+def game_over?(player, computer)
+  player >= 5 || computer >= 5
+end
+
 def get_result(first, second)
   return '' if first.empty? || second.empty?
   return 'tie' if first == second
@@ -120,6 +124,14 @@ def eval_choice(input)
   end
 end
 
+def exit_game
+  clear
+  puts 'Thank you for playing! Goodbye.'
+  puts
+  puts
+  exit
+end
+
 loop do
   clear
   puts '(R)ules ... (S)tart Game ... (Q)uit Game'
@@ -140,7 +152,6 @@ loop do
       player_score = 0
       computer_score = 0
       loop do
-        break if player_score == 5 || computer_score == 5
         loop do
           result = get_result(choice, computer_choice)
           player_score += 1 if result == 'win'
@@ -148,18 +159,28 @@ loop do
           display_score(player_score, computer_score)
           display_result(choice, computer_choice, result)
 
-          choice = ''
-          computer_choice = ''
-
-          puts '(R)Rock .. (P)Paper .. (S)Scissors .. (SS)Spock .. (L)Lizard'
-          if choice == ''
-            print 'What is your choice?: '
+          if game_over?(player_score, computer_score)
+            puts 'Game Over'
+            player_score = 0
+            computer_score = 0
+            result = ''
+            choice = ''
+            gets
           else
-            print 'Invalid Choice. Please choose from above: '
+            choice = ''
+            computer_choice = ''
+
+            puts '(R)Rock .. (P)Paper .. (S)Scissors .. (SS)Spock .. (L)Lizard'
+            if choice == ''
+              print 'What is your choice?: '
+            else
+              print 'Invalid Choice. Please choose from above: '
+            end
+            choice = gets.chomp.downcase
+            choice = eval_choice(choice)
+            break if VALID_CHOICES.include?(choice)
           end
-          choice = gets.chomp.downcase
-          choice = eval_choice(choice)
-          break if VALID_CHOICES.include?(choice)
+
         end
         computer_choice = VALID_CHOICES.sample
       end
@@ -167,20 +188,9 @@ loop do
     end
 
   elsif action == 'q'
-    break
-
+    exit_game
   else
     clear
     next
   end
 end
-
-clear
-puts 'Thank you for playing! Goodbye.'
-puts
-
-puts win?('rock', 'lizard')
-puts display_result('rock', 'lizard')
-
-puts win?('rock', 'paper')
-puts display_result('paper', 'rock')
