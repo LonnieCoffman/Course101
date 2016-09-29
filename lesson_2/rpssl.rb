@@ -18,6 +18,35 @@ RULES = <<-RULES
 
   RULES
 
+START_MESSAGE = <<-START
+  ................................................
+
+  The first to 5 wins.
+  Make your selection below to begin.
+
+  ................................................
+
+  START
+
+RESULTS_MESSAGE = <<-RESULTS
+  ................................................
+  You picked: {player}
+  Computer Picked: {computer}
+
+  {rule}........YOU {outcome}!
+  ................................................
+
+RESULTS
+
+GAMEOVER_MESSAGE = <<-GAMEOVER
+................................................
+Game Over! You {result}!
+
+Well played!
+
+................................................
+GAMEOVER
+
 player_score = 0
 computer_score = 0
 
@@ -55,17 +84,28 @@ def win?(first, second)
 end
 
 def get_result(first, second)
+  return '' if first.empty? || second.empty?
   return 'tie' if first == second
   return 'win' if win?(first, second)
   'lose'
 end
 
-def display_result(first, second)
+def get_rule(first, second)
   WINNING_COMBOS[first.to_sym].each do |rule|
-    if rule.include?(second)
-      puts "#{rule}!!"
-      break
-    end
+    return "#{rule}!!" if rule.include?(second)
+  end
+end
+
+def display_result(player, computer, outcome)
+  if outcome == ''
+    puts START_MESSAGE
+  else
+    rule = 'Great Minds Think Alike'
+    rule = get_rule(player, computer) if outcome == 'win'
+    rule = get_rule(computer, player) if outcome == 'lose'
+    puts RESULTS_MESSAGE
+      .gsub('{player}', player).gsub('{computer}', computer)
+      .gsub('{rule}', rule.upcase).gsub('{outcome}', outcome.upcase)
   end
 end
 
@@ -94,12 +134,23 @@ loop do
   elsif action == 's'
     loop do
       clear
-
+      choice = ''
+      computer_choice = ''
+      result = ''
+      player_score = 0
+      computer_score = 0
       loop do
-        # make your choice
-        choice = ''
+        break if player_score == 5 || computer_score == 5
         loop do
+          result = get_result(choice, computer_choice)
+          player_score += 1 if result == 'win'
+          computer_score += 1 if result == 'lose'
           display_score(player_score, computer_score)
+          display_result(choice, computer_choice, result)
+
+          choice = ''
+          computer_choice = ''
+
           puts '(R)Rock .. (P)Paper .. (S)Scissors .. (SS)Spock .. (L)Lizard'
           if choice == ''
             print 'What is your choice?: '
@@ -110,25 +161,7 @@ loop do
           choice = eval_choice(choice)
           break if VALID_CHOICES.include?(choice)
         end
-
         computer_choice = VALID_CHOICES.sample
-
-        # determine winner
-        puts
-        puts "You chose: #{choice}; Computer chose: #{computer_choice}"
-        result = get_result(choice, computer_choice)
-# ----- move to method
-        case result
-        when 'tie'
-          puts 'you tied!'
-        when 'win'
-          puts 'you won!'
-        when 'lose'
-          puts 'you lose!'
-        end
-# ----- end move to method
-        gets
-        break
       end
       break
     end
