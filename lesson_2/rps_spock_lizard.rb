@@ -43,11 +43,8 @@ GAMEOVER_MESSAGE = <<-GAMEOVER
 
   Wanna Play Again?
   ................................................
-  Press Enter to play again or Q to quit.
+  Press ENTER to play again or Q to quit.
 GAMEOVER
-
-player_score = 0
-computer_score = 0
 
 def clear
   system 'cls'   # mac
@@ -115,6 +112,7 @@ def display_result(player, computer, outcome)
 end
 
 def display_choice_prompt(input)
+  puts '(R)Rock .. (P)Paper .. (S)Scissors .. (L)Lizard .. (SS)Spock'
   if %w(r p s l ss h).include?(input) || input.empty?
     print 'What is your choice? : '
   else
@@ -182,7 +180,6 @@ loop do
     # get player input
     valid = true
     # get input
-    puts '(R)Rock .. (P)Paper .. (S)Scissors .. (L)Lizard .. (SS)Spock'
     display_choice_prompt(action)
 
     action = gets.chomp.downcase
