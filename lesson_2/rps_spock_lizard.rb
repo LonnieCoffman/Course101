@@ -49,17 +49,22 @@ GAMEOVER
 def clear
   system 'cls'   # mac
   system 'clear' # windows
+end
+
+def display_header
   puts 'Welcome to Rock - Paper - Scissors - Lizard - Spock'
   puts '==================================================='
+end
+
+def display_options
   puts '(H)ow to play ... (Q)uit Game'
   puts
 end
 
 def display_rules
-  clear
   puts RULES
   WINNING_COMBOS.each do |_, row|
-    row.map { |rule| puts "  #{rule}" }
+    row.each { |rule| puts "  #{rule}" }
     puts
   end
   puts '  ======================'
@@ -69,7 +74,6 @@ def display_rules
 end
 
 def display_score(player, computer)
-  clear
   puts "Current Score -- PLAYER: #{player} -- COMPUTER: #{computer}"
   puts
 end
@@ -98,16 +102,26 @@ def get_rule(first, second)
   end
 end
 
-def display_result(player, computer, outcome)
+def get_outcome_message(player, computer, outcome)
+  rule = 'Great Minds Think Alike'
+  rule = get_rule(player, computer) if outcome == 'win'
+  rule = get_rule(computer, player) if outcome == 'lose'
+  rule
+end
+
+def display_result(player, computer, outcome, rule)
   if outcome == ''
     puts START_MESSAGE
   else
-    rule = 'Great Minds Think Alike'
-    rule = get_rule(player, computer) if outcome == 'win'
-    rule = get_rule(computer, player) if outcome == 'lose'
-    puts RESULTS_MESSAGE
-      .gsub('{player}', player).gsub('{computer}', computer)
-      .gsub('{rule}', rule.upcase).gsub('{outcome}', outcome.upcase)
+    puts <<-RESULTS
+  ................................................
+    You picked: #{player}
+    Computer Picked: #{computer}
+
+    #{rule.upcase}........YOU #{outcome.upcase}!
+  ................................................
+
+    RESULTS
   end
 end
 
@@ -122,7 +136,13 @@ end
 
 def display_game_over(player, computer)
   outcome = player > computer ? 'Won' : 'Lost'
-  puts GAMEOVER_MESSAGE.gsub('{result}', outcome)
+  puts <<-GAMEOVER
+    Game Over! You #{outcome} This Round!
+
+    Wanna Play Again?
+    ................................................
+    Press ENTER to play again or Q to quit.
+  GAMEOVER
 end
 
 def eval_choice(input)
@@ -137,7 +157,7 @@ def eval_choice(input)
 end
 
 def exit_game
-  clear
+  puts
   puts 'Thank you for playing! Goodbye.'
   puts
   puts
@@ -146,7 +166,6 @@ end
 
 # start game loop
 loop do
-  clear
   # reset game variables
   choice = ''
   computer_choice = ''
@@ -162,18 +181,25 @@ loop do
       result = get_result(choice, computer_choice)
       player_score += 1 if result == 'win'
       computer_score += 1 if result == 'lose'
-      puts 'update score'
     end
 
+    outcome_message = get_outcome_message(choice, computer_choice, result)
     # display current score and results
+    clear
+    display_header
+    display_options
     display_score(player_score, computer_score)
-    display_result(choice, computer_choice, result)
+    display_result(choice, computer_choice, result, outcome_message)
 
     # check if game has been won
     if game_over?(player_score, computer_score)
       display_game_over(player_score, computer_score)
       again = gets.chomp.downcase
-      exit_game if again == 'q'
+      if again == 'q'
+        clear
+        display_header
+        exit_game
+      end
       break
     end
 
@@ -185,8 +211,12 @@ loop do
     action = gets.chomp.downcase
 
     if action == 'q'
+      clear
+      display_header
       exit_game
     elsif action == 'h'
+      clear
+      display_header
       display_rules
     elsif !(%w(r p s l ss).include? action)
       valid = false
