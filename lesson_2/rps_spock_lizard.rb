@@ -28,24 +28,6 @@ START_MESSAGE = <<-START
 
   START
 
-RESULTS_MESSAGE = <<-RESULTS
-  ................................................
-  You picked: {player}
-  Computer Picked: {computer}
-
-  {rule}........YOU {outcome}!
-  ................................................
-
-RESULTS
-
-GAMEOVER_MESSAGE = <<-GAMEOVER
-  Game Over! You {result} This Round!
-
-  Wanna Play Again?
-  ................................................
-  Press ENTER to play again or Q to quit.
-GAMEOVER
-
 def clear
   system 'cls'   # mac
   system 'clear' # windows
