@@ -23,7 +23,7 @@
 #    three is: one
 
 # Question 4
-require 'Securerandom'
+require 'securerandom'
 
 def generate_uuid
   uuid = [4, 2, 2, 2, 6].map { |num| SecureRandom.hex(num) }
