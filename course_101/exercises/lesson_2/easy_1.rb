@@ -1,9 +1,10 @@
-# question 1 - What would you expect the code below to print?
+# question 1
 numbers = [1, 2, 2, 3]
 numbers.uniq
 
 puts numbers
-# I would expect 1 2 3.  Wrong!  1 2 2 3 is returned because uniq creates
+# I would expect 1 2 3.  Wrong!
+# 1 2 2 3 is returned because uniq creates
 # a new array and the original array is not mutated. Using the bang operator
 # would cause the result I predicted.
 

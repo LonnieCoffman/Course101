@@ -1,12 +1,9 @@
-# Question 1 - Let's do some "ASCII Art" (a stone-age form of nerd artwork from
-# back in the days before computers had video screens).
-#
-# For this exercise, write a one-line program that creates the following output
-# 10 times, with the subsequent line indented 1 space to the right:
+# Question 1
+
 10.times { |number| puts "#{(' ' * number)}The Flintstones Rock!" }
 
-# Question 2 - Create a hash that expresses the frequency with which each letter
-# occurs in this string:
+# Question 2
+
 statement = 'The Flintstones Rock'
 
 result = {}
@@ -48,13 +45,8 @@ puts
 # the end of the array.  Because there are no more elements in the array the loop
 # ends.  The numbers array would currently return [1, 2].
 
-# Question 5 - Alan wrote the following method, which was intended to show all
-# of the factors of the input number.  Alyssa noticed that this will fail if the
-# input is 0, or a negative number, and asked Alan to change the loop. How can
-# you change the loop construct (instead of using begin/end/until) to make
-# this work? Note that we're not looking to find the factors for 0 or negative
-# numbers, but we just want to handle it gracefully instead of raising an
-# exception or going into an infinite loop.
+# Question 5
+
 def factors(number)
   dividend = number
   divisors = []
@@ -75,3 +67,56 @@ puts factors(10)
 # since this is the last line evalutated it is returned.  So, no matter what
 # happens in the method, provided there are no errors the divisors array is
 # returned.
+
+# Question 6
+# Do you like << or + for modifying the buffer?".
+# Is there a difference between the two, other than what operator she chose
+# to use to add an element to the buffer?
+# no. Wrong. The caller is mutated.
+
+# Question 7
+limit = 15
+
+def fib(first_num, second_num, limit)
+  while second_num < limit
+    sum = first_num + second_num
+    first_num = second_num
+    second_num = sum
+  end
+  sum
+end
+
+result = fib(0, 1, limit)
+puts "result is #{result}"
+# The limit variable is in the wrong scope. It can be fixed by passing it in
+# as a parameter to the method
+
+# Question 8
+
+def titleize(string)
+  string.split.map(&:capitalize).join(' ')
+end
+
+puts titleize('mary had a little lamb')
+
+# Question 9
+
+munsters = {
+  "Herman" => { "age" => 32, "gender" => "male" },
+  "Lily" => { "age" => 30, "gender" => "female" },
+  "Grandpa" => { "age" => 402, "gender" => "male" },
+  "Eddie" => { "age" => 10, "gender" => "male" },
+  "Marilyn" => { "age" => 23, "gender" => "female"}
+}
+
+munsters.each do |name, info|
+  case info['age']
+  when (0..18)
+    info['age_group'] = 'kid'
+  when (18..65)
+    info['age_group'] = 'adult'
+  else
+    info['age_group'] = 'senior'
+  end
+end
+p munsters
