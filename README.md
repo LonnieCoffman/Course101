@@ -1,1 +1,1 @@
-Exercises and assignments for courses taken at Launch School
+Exercises and assignments for courses taken at Launch School.
