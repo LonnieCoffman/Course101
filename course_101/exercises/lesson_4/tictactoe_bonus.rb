@@ -14,6 +14,7 @@ end
 # rubocop:disable Metrics/AbcSize
 def display_board(brd)
   system 'clear'
+  system 'cls'
   puts "You're #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}"
   puts ""
   puts "     |     |"
@@ -88,37 +89,50 @@ def detect_winner(brd)
   end
   nil
 end
-
-player_score = 0
-computer_score = 0
 loop do
-  display_score(player_score, computer_score)
-  board = initialize_board
-
+  player_score = 0
+  computer_score = 0
   loop do
-    display_board(board)
-    display_score(player_score, computer_score)
+    loop do
+      display_score(player_score, computer_score)
+      board = initialize_board
 
-    player_places_piece!(board)
-    break if someone_won?(board) || board_full?(board)
+      loop do
+        display_board(board)
+        display_score(player_score, computer_score)
 
-    computer_places_piece!(board)
-    break if someone_won?(board) || board_full?(board)
+        player_places_piece!(board)
+        break if someone_won?(board) || board_full?(board)
+
+        computer_places_piece!(board)
+        break if someone_won?(board) || board_full?(board)
+      end
+
+      display_board(board)
+
+      if someone_won?(board)
+        winner = detect_winner(board)
+        winner == 'Player' ? player_score += 1 : computer_score += 1
+        display_score(player_score, computer_score)
+        prompt "#{winner} won this game!"
+      else
+        display_score(player_score, computer_score)
+        prompt "It's a tie!"
+      end
+
+      break if player_score >= 5 || computer_score >= 5
+      prompt "Press ENTER to continue"
+      break if gets
+    end
+    break if player_score >= 5 || computer_score >= 5
   end
 
-  display_board(board)
-
-  if someone_won?(board)
-    winner = detect_winner(board)
-    prompt "#{winner} won!"
-    winner == 'Player' ? player_score += 1 : computer_score += 1
-  else
-    prompt "It's a tie!"
-  end
-
-  prompt "Play again? (y or n)"
-  answer = gets.chomp
-  break unless answer.downcase.start_with?('y')
+  print player_score > computer_score ? "You Won" : "The Computer Won"
+  puts ' the best out of 5!'
+  puts
+  puts "game over!"
+  puts
+  prompt "Do you want to play again? (Y or N)"
+  break if gets.chomp.downcase.start_with?('n')
 end
-
 prompt "Thanks for playing!"
