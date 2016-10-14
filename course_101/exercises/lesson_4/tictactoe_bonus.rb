@@ -1,5 +1,6 @@
 require 'pry'
 
+FIRST_MOVE = 'choose'.freeze # player, computer or choose
 INITIAL_MARKER = ' '.freeze
 PLAYER_MARKER = 'X'.freeze
 COMPUTER_MARKER = 'O'.freeze
@@ -54,6 +55,11 @@ def joinor(brd, delimiter = ',', connector = 'or')
   choices.join(delimiter + ' ') + ending
 end
 
+def place_piece!(brd, current_player)
+  player_places_piece!(brd) if current_player == 'player'
+  computer_places_piece!(brd) if current_player == 'computer'
+end
+
 def player_places_piece!(brd)
   square = ''
   loop do
@@ -64,15 +70,6 @@ def player_places_piece!(brd)
   end
 
   brd[square] = PLAYER_MARKER
-end
-
-def strategy(brd, marker)
-  square = 0
-  WINNING_LINES.each do |line|
-    next if brd.values_at(*line).count(marker) != 2
-    square = line.select { |val| empty_squares(brd).include?(val) }.join.to_i
-  end
-  square
 end
 
 def computer_places_piece!(brd)
@@ -87,6 +84,16 @@ def computer_places_piece!(brd)
   else
     brd[empty_squares(brd).sample] = COMPUTER_MARKER
   end
+end
+
+def strategy(brd, marker)
+  square = 0
+  WINNING_LINES.each do |line|
+    next if brd.values_at(*line).count(marker) != 2
+    square = line.select { |val| empty_squares(brd).include?(val) }.join.to_i
+    break if square > 0
+  end
+  square
 end
 
 def board_full?(brd)
@@ -110,20 +117,30 @@ end
 loop do
   player_score = 0
   computer_score = 0
+  first = FIRST_MOVE
   loop do
     loop do
-      display_score(player_score, computer_score)
       board = initialize_board
+      display_board(board)
+      display_score(player_score, computer_score)
+
+      if first == 'choose'
+        loop do
+          puts 'Who goes first? (player or computer)'
+          first = gets.chomp.downcase
+          break if first == 'player' || first == 'computer'
+          puts 'Choose either player or computer'
+        end
+      end
 
       loop do
         display_board(board)
         display_score(player_score, computer_score)
 
-        player_places_piece!(board)
+        place_piece!(board, first)
         break if someone_won?(board) || board_full?(board)
 
-        computer_places_piece!(board)
-        break if someone_won?(board) || board_full?(board)
+        first = first == 'computer' ? 'player' : 'computer'
       end
 
       display_board(board)
