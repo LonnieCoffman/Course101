@@ -66,13 +66,27 @@ def player_places_piece!(brd)
   brd[square] = PLAYER_MARKER
 end
 
-def computer_places_piece!(brd)
-  square = empty_squares(brd).sample
+def strategy(brd, marker)
+  square = 0
   WINNING_LINES.each do |line|
-    next if brd.values_at(*line).count(PLAYER_MARKER) != 2
+    next if brd.values_at(*line).count(marker) != 2
     square = line.select { |val| empty_squares(brd).include?(val) }.join.to_i
   end
-  brd[square] = COMPUTER_MARKER
+  square
+end
+
+def computer_places_piece!(brd)
+  offense = strategy(brd, COMPUTER_MARKER)
+  defense = strategy(brd, PLAYER_MARKER)
+  if offense > 0
+    brd[offense] = COMPUTER_MARKER
+  elsif defense > 0
+    brd[defense] = COMPUTER_MARKER
+  elsif brd[5] == INITIAL_MARKER
+    brd[5] = COMPUTER_MARKER
+  else
+    brd[empty_squares(brd).sample] = COMPUTER_MARKER
+  end
 end
 
 def board_full?(brd)
@@ -87,7 +101,7 @@ def detect_winner(brd)
   WINNING_LINES.each do |line|
     if brd.values_at(*line).count(PLAYER_MARKER) == 3
       return 'Player'
-    elsif brd.values_at(*line).count(PLAYER_MARKER) == 3
+    elsif brd.values_at(*line).count(COMPUTER_MARKER) == 3
       return 'Computer'
     end
   end
