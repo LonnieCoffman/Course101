@@ -68,6 +68,10 @@ end
 
 def computer_places_piece!(brd)
   square = empty_squares(brd).sample
+  WINNING_LINES.each do |line|
+    next if brd.values_at(*line).count(PLAYER_MARKER) != 2
+    square = line.select { |val| empty_squares(brd).include?(val) }.join.to_i
+  end
   brd[square] = COMPUTER_MARKER
 end
 
