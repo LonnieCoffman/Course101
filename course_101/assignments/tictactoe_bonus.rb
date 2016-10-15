@@ -7,6 +7,7 @@ COMPUTER_MARKER = 'O'.freeze
 WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
                 [[1, 4, 7], [2, 5, 8], [3, 6, 9]] +
                 [[1, 5, 9], [3, 5, 7]]
+NUM_GAMES = 3
 
 def prompt(message)
   puts "=>#{message}"
@@ -106,14 +107,12 @@ end
 
 def detect_winner(brd)
   WINNING_LINES.each do |line|
-    if brd.values_at(*line).count(PLAYER_MARKER) == 3
-      return 'Player'
-    elsif brd.values_at(*line).count(COMPUTER_MARKER) == 3
-      return 'Computer'
-    end
+    return 'Player' if brd.values_at(*line).count(PLAYER_MARKER) == 3
+    return 'Computer' if brd.values_at(*line).count(COMPUTER_MARKER) == 3
   end
   nil
 end
+
 loop do
   player_score = 0
   computer_score = 0
@@ -129,18 +128,19 @@ loop do
           puts 'Who goes first? (player or computer)'
           first = gets.chomp.downcase
           break if first == 'player' || first == 'computer'
-          puts 'Choose either player or computer'
         end
       end
+
+      current_player = first
 
       loop do
         display_board(board)
         display_score(player_score, computer_score)
 
-        place_piece!(board, first)
+        place_piece!(board, current_player)
         break if someone_won?(board) || board_full?(board)
 
-        first = first == 'computer' ? 'player' : 'computer'
+        current_player = current_player == 'computer' ? 'player' : 'computer'
       end
 
       display_board(board)
@@ -155,19 +155,25 @@ loop do
         prompt "It's a tie!"
       end
 
-      break if player_score >= 5 || computer_score >= 5
-      prompt "Press ENTER to continue"
+      break if player_score >= NUM_GAMES || computer_score >= NUM_GAMES
+      prompt 'Press ENTER to continue'
       break if gets
     end
-    break if player_score >= 5 || computer_score >= 5
+    break if player_score >= NUM_GAMES || computer_score >= NUM_GAMES
   end
 
-  print player_score > computer_score ? "You Won" : "The Computer Won"
-  puts ' the best out of 5!'
+  print player_score > computer_score ? 'You Won' : 'The Computer Won'
+  puts " the best out of #{NUM_GAMES}!"
   puts
-  puts "game over!"
+  puts 'game over!'
   puts
-  prompt "Do you want to play again? (Y or N)"
-  break if gets.chomp.downcase.start_with?('n')
+
+  answer = ''
+  loop do
+    prompt 'Do you want to play again? (Y or N)'
+    answer = gets.chomp.downcase
+    break if answer == 'n' || answer == 'y'
+  end
+  break if answer == 'n'
 end
-prompt "Thanks for playing!"
+prompt 'Thanks for playing!'
