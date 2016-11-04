@@ -44,8 +44,8 @@ hidden[7] = '  │░░░░░░░░░│'
 hidden[8] = '  └─────────┘'
 
 def clear
-  system 'cls'   # mac
-  system 'clear' # windows
+  system 'clear' # mac
+  system 'cls' # windows
 end
 
 def build_hidden_card(player, hidden)
