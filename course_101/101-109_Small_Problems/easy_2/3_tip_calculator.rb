@@ -1,3 +1,4 @@
+# initial solution
 def calculate_tip(total, percentage)
   tip = (total * (percentage * 0.01)).round(2)
   total = (total + tip).round(2)

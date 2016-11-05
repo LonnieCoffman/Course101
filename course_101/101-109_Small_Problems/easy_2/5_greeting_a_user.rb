@@ -1,6 +1,7 @@
+# initial solution
 def holla_back(name)
-  if name.end_with?('!') return puts "hello #{name}. why are we screaming?".upcase
-  else puts "hello #{name}." end
+  return puts "hello #{name}. why are we screaming?".upcase if name.end_with?('!')
+  puts "hello #{name}."
 end
 
 print 'What is your name? '
