@@ -1,7 +1,7 @@
 def fibonacci_last(num)
   nth = [1, 1]
   3.upto(num) { nth[0], nth[1] = nth[1], nth[0] + nth[1] }
-  nth[1].to_s[-1]
+  nth[1].to_s[-1].to_i
 end
 
 puts fibonacci_last(15)        # -> 0  (the 15th Fibonacci number is 610)
