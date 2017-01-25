@@ -13,7 +13,7 @@ end
 def palindromes(str)
   new_arr = []
   arr = substrings(str)
-  arr.each { |word| new_arr << word if word == word.reverse && word.size > 1 }
+  arr.map { |word| new_arr << word if word == word.reverse && word.size > 1 }
   new_arr
 end
 
