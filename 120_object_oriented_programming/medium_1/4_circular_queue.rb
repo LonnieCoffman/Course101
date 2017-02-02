@@ -10,9 +10,8 @@ class CircularQueue
   end
 
   def dequeue
-    removed = @queue.shift
     @queue << nil
-    removed
+    @queue.shift
   end
 end
 
