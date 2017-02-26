@@ -14,7 +14,7 @@ class Player
         puts "What's your name?"
         n = gets.chomp
         break unless n.empty?
-        puts "Sorry, must enter a value"
+        puts "Sorry, must enter a value."
       end
       self.name = n
     else
@@ -26,10 +26,10 @@ class Player
     if human?
       choice = nil
       loop do
-        puts "Please choose rock, paper, or scissors:"
+        puts 'Please choose rock, paper, or scissors:'
         choice = gets.chomp
         break if ['rock', 'paper', 'scissors'].include? choice
-        puts "Sorry, invalid choice."
+        puts 'Sorry, invalid choice.'
       end
       self.move = choice
     else
@@ -42,21 +42,20 @@ class Player
   end
 end
 
-# Game Orchestration Engine
 class RPSGame
   attr_accessor :human, :computer
 
   def initialize
-    @human = Player.new(:human)
+    @human = Player.new
     @computer = Player.new(:computer)
   end
 
   def display_welcome_message
-    puts "Welcome to Rock, Paper, Scissors!"
+    puts 'Welcome to Rock, Paper, Scissors!'
   end
 
   def display_goodbye_message
-    puts "Thanks for playing Rock, Paper, Scissors. Good bye!"
+    puts 'Thanks for playing Rock, Paper, Scissors. Good Bye!'
   end
 
   def display_winner
@@ -82,19 +81,17 @@ class RPSGame
   def play_again?
     answer = nil
     loop do
-      puts "Would you like to play again? (y/n)"
+      puts 'Would you like to play again? (y/n)'
       answer = gets.chomp
       break if ['y', 'n'].include? answer.downcase
-      puts "Sorry, must be y or n"
+      puts 'Sorry, must be y or n'
     end
-
     return true if answer == 'y'
     return false
   end
 
   def play
     display_welcome_message
-
     loop do
       human.choose
       computer.choose
