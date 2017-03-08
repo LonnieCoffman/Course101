@@ -16,28 +16,27 @@ module Displayable
   def display_move_ui
     display_upper_ui
     puts "You picked: #{human.move}"
-    puts "Computer Picked: #{computer.move}"
-    puts
+    puts puts "Computer Picked: #{computer.move}"
     puts outcome_message
     display_lower_ui
   end
 
   def display_rules
     clear_screen
-    puts ' ===  Game Rules ===='
-    puts ' Each round the player will choose rock, paper, scissors, lizard or '
-    puts ' spock. The computer will then choose from the same.  Both choices '
-    puts ' will be revealed at the same time and the winner will be determined '
-    puts ' by the heirarchy below.  The winner of the round will be awarded '
-    puts " 1 point and the first to #{Game::ROUND_WIN} wins the match."
-    puts
+    puts <<~RULES
+      ===  Game Rules ====
+      Each round the player will choose rock, paper, scissors, lizard or
+      spock. The computer will then choose from the same.  Both choices
+      will be revealed at the same time and the winner will be determined
+      by the heirarchy below.  The winner of the round will be awarded
+      1 point and the first to #{Game::ROUND_WIN} wins the match.
+
+      RULES
     Game::WINNING_COMBOS.each do |_, row|
       row.each { |rule| puts " #{rule}" }
       puts
     end
-    puts ' ======================'
-    print ' Press ENTER to go back'
-    gets
+    display_go_back
   end
 
   def display_history
@@ -49,6 +48,10 @@ module Displayable
       row.each_with_index { |e| print "  #{e}#{' ' * (8 - e.size)}|" }
       puts
     end
+    display_go_back
+  end
+
+  def display_go_back
     puts puts ' ==========================================='
     print ' Press ENTER to go back'
     gets
@@ -56,8 +59,7 @@ module Displayable
 
   def display_goodbye_message
     puts
-    puts 'Thank you for playing. Good bye.'
-    puts
+    puts puts 'Thank you for playing. Good bye.'
   end
 
   def display_upper_ui
@@ -75,19 +77,19 @@ module Displayable
 
   def outcome_message
     return 'Great Minds Think Alike.....You Tie!' if @outcome == 'tie'
-    return get_rule(human.move, computer.move) if @outcome == 'win'
-    get_rule(computer.move, human.move)
+    return get_outcome(human.move, computer.move) if @outcome == 'win'
+    get_outcome(computer.move, human.move)
   end
 
-  def get_rule(first, second)
+  def get_outcome(first, second)
     Game::WINNING_COMBOS[first.to_sym].each do |rule|
       return "#{rule}!!" if rule.include?(second)
     end
   end
 
   def clear_screen
-    system 'cls' # mac
-    system 'clear' # windows / linux
+    system 'cls' # windows
+    system 'clear' # mac / linux
   end
 
   def display_header
@@ -236,7 +238,7 @@ end
 
 class Score
   def initialize
-    @score = 0
+    reset
   end
 
   def reset
@@ -325,14 +327,11 @@ class Game
   def user_input
     input = ''
     loop do
-      if input == ''
-        print 'What is your choice? : '
-      else
-        print 'That is an invalid choice.  Choose again :'
-      end
+      print 'What is your choice? : '
       input = gets.chomp.downcase
       break if %w(h m q r p s l ss).include? input
       human.move.nil? ? display_game_start_ui : display_move_ui
+      print 'That is an invalid choice.  '
     end
     @option = input
   end
