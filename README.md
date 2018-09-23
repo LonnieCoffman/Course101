@@ -1,1 +1,1 @@
-Exercises and assignments for courses taken at Launch School.
+Simple console based games created with Ruby while attending Launch School.
